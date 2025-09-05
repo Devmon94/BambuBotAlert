@@ -1,6 +1,8 @@
 .env
+venv/
 __pycache__/
 database/
+bambu.log
 *.pyc
 *.pyo
 *.db

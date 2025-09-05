@@ -8,6 +8,7 @@ from queries_db import QueriesDB
 import argparse
 import json
 import os
+import re
 import requests
 import smtplib
 import sys
@@ -38,18 +39,23 @@ def load_config():
 
 def save_config(config):
     with open(CHANNEL_FILE, "w") as f:
-        json.dump(config, f, indent=4)
-
+    	json.dump(config, f, indent=4)
+ 
 
 def clean_price(price):
     price_str = price.replace("€", "").replace("EUR", "").strip()
 
-    if "," in price_str:
-        price_str = price_str.replace(".", "")
-        price_str = price_str.replace(",", ".")
-
-    last_price = float(price_str)
-    return last_price
+    if "," in price_str and "." in price_str: 
+        if price_str.find('.') < price_str.find(','):
+            price_str = price_str.replace(".","").replace(",",".")
+            
+        else:
+            price_str = price_str.replace(",","")
+            
+    elif "," in price_str:
+        price_str = price_str.replace(",",".")
+           
+    return float(price_str)
 
 
 def send_mail_alert(subject, body, to_email):
